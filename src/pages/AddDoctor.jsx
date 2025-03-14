@@ -212,7 +212,7 @@ export default function AddDoctor() {
   const [dataQr, setDateQr] = useState(null);
   const fileRef = React.useRef();
 
-  const handleClickQR = () => {
+   const handleClickQR = () => {
     fileRef.current.click();
   };
 

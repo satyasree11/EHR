@@ -174,23 +174,23 @@ const handleSubmit = (e) => {
   const [dataQr, setDateQr] = useState(null);
   const fileRef = React.useRef();
 
-  const handleClickQR = () => {
-    fileRef.current.click();
-  };
-
-  const handleChangeQR = async (e) => {
-    const fileQr = e.target.files[0];
-    setFileQr(fileQr);
-    const result = await QrScanner.scanImage(fileQr);
-    setDateQr(result);
-  };
-
-  // copy pk to clipboard
-
-  const handleCopyClick = () => {
-    navigator.clipboard.writeText(dataQr.slice(-42));
-    setDateQr("Copied !");
-  };
+     const handleClickQR = () => {
+      fileRef.current.click();
+    };
+  
+    const handleChangeQR = async (e) => {
+      const fileQr = e.target.files[0];
+      setFileQr(fileQr);
+      const result = await QrScanner.scanImage(fileQr);
+      setDateQr(result);
+    };
+  
+    // copy pk to clipboard
+  
+    const handleCopyClick = () => {
+      navigator.clipboard.writeText(dataQr.slice(-42));
+      setDateQr("Copied !");
+    };
 
   ////
 

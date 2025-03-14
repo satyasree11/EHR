@@ -210,31 +210,50 @@ export default function AddPatient() {
 
   // for QR scanner
   const [fileQr, setFileQr] = useState(null);
-  const [dataQr, setDataQr] = useState(null);
+  const [dataQr, setDateQr] = useState(null);
   const fileRef = React.useRef();
+  
 
-  const handleClickQR = () => {
-    fileRef.current.click();
-  };
-
-  const handleChangeQR = async (e) => {
-    const qrFile = e.target.files[0];
-    setFileQr(qrFile);
-    try {
-      const result = await QrScanner.scanImage(qrFile);
-      setDataQr(result);
-    } catch (error) {
-      console.error("Failed to scan QR code:", error);
-    }
-  };
-
-  // Copy QR data to clipboard
-  const handleCopyClick = () => {
-    if (dataQr) {
+     const handleClickQR = () => {
+      fileRef.current.click();
+    };
+  
+    const handleChangeQR = async (e) => {
+      const fileQr = e.target.files[0];
+      setFileQr(fileQr);
+      const result = await QrScanner.scanImage(fileQr);
+      setDateQr(result);
+    };
+  
+    // copy pk to clipboard
+  
+    const handleCopyClick = () => {
       navigator.clipboard.writeText(dataQr.slice(-42));
-      setDataQr("Copied!");
-    }
-  };
+      setDateQr("Copied !");
+    };
+
+  // const handleClickQR = () => {
+  //   fileRef.current.click();
+  // };
+
+  // const handleChangeQR = async (e) => {
+  //   const qrFile = e.target.files[0];
+  //   setFileQr(qrFile);
+  //   try {
+  //     const result = await QrScanner.scanImage(qrFile);
+  //     setDataQr(result);
+  //   } catch (error) {
+  //     console.error("Failed to scan QR code:", error);
+  //   }
+  // };
+
+  // // Copy QR data to clipboard
+  // const handleCopyClick = () => {
+  //   if (dataQr) {
+  //     navigator.clipboard.writeText(dataQr.slice(-42));
+  //     setDataQr("Copied!");
+  //   }
+  // };
 
   ////
   return (

@@ -12,9 +12,9 @@ const Home = () => {
   const searchParams = new URLSearchParams(location.search);
   const acount = searchParams.get("account");
   const [Contract, setContract] = useState(null);
-    const [Hospitaldate, setHospitaldate] = useState([]);
-  const [Doctordate, setDoctordate] = useState([]);
-  const [Patientdate, setPatientdate] = useState([]);
+  //   const [Hospitaldate, setHospitaldate] = useState([]);
+  // const [Doctordate, setDoctordate] = useState([]);
+  // const [Patientdate, setPatientdate] = useState([]);
 
   const [wEb3, setwEb3] = useState({
     provider: null,
@@ -73,29 +73,84 @@ const Home = () => {
 }, [wEb3]);
 
 ////////////////////////////////////////////////////////////
-  ///get Number of all Hospitals at system.
-   useEffect(() => {
-    if (Contract && acount) {
-      const fetchData = async () => {
-        try {
-          // Fetch Hospital Data
-          const hospitals = await Contract.methods.get_all_hospitals().call({ from: acount });
-          setHospitaldate(hospitals);
+  
+    const [Hospitaldate, setHospitaldate] = useState([]);
+  const [Hospitalname, setHospitalname] = useState([]);
+  const Hospitalnames = [];
 
-          // Fetch Doctor Data
-          const doctors = await Contract.methods.get_all_Doctors().call({ from: acount });
-          setDoctordate(doctors);
-
-          // Fetch Patient Data
-          const patients = await Contract.methods.get_all_Patients().call({ from: acount });
-          setPatientdate(patients);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      };
-      fetchData();
+  const getallhospitals = async () => {
+    const date = await Contract.methods
+      .get_all_hospitals()
+      .call({ from: acount });
+    for (var i = 0; i < date.length; i++) {
+      Hospitalnames[i] = date[i].name;
     }
-  }, [Contract, acount]);
+    setHospitalname(Hospitalnames);
+    setHospitaldate(date);
+  };
+  getallhospitals();
+
+  ///get Number of all Doctors at system.(By Lenght)
+
+  const [Doctordate, setDoctordate] = useState([]);
+  const [DocNUM_For_Hos, setDocNUM_For_Hos] = useState([]);
+  const DoctorNUM_For_Hos = [];
+  const getallDoctors = async () => {
+    const doc = await Contract.methods.get_all_Doctors().call({
+      from: acount,
+    });
+    setDoctordate(doc);
+    // for every hospital.
+    for (var a = 0; a < Hospitaldate.length; a++) {
+      var num = 0;
+      for (var i = 0; i < doc.length; i++) {
+        if (doc[i].hospital_addr == Hospitaldate[a].addr) {
+          num++;
+        }
+      }
+      DoctorNUM_For_Hos[a] = num;
+      setDocNUM_For_Hos(DoctorNUM_For_Hos);
+    }
+  };
+
+  getallDoctors();
+
+  ///get Number of all patients at system.
+
+  const [Recorddate, setRecorddate] = useState();
+  const getallrecord = async () => {
+    const date = await Contract.methods
+      .get_record_number()
+      .call({ from: acount });
+    setRecorddate(date);
+  };
+
+  getallrecord();
+
+  // get all patients numder
+  const [Patientdate, setPatientdate] = useState([]);
+  const [PatientNUM_For_Hos, setPatientNUM_For_Hos] = useState([]);
+  const Patient_NUM_For_Hos = [];
+  ///Date At TABLE for Patients.
+  const getallPatients = async () => {
+    const pat = await Contract.methods
+      .get_all_Patients()
+      .call({ from: acount });
+    setPatientdate(pat);
+    // for every hospital.
+    for (var a = 0; a < Hospitaldate.length; a++) {
+      var num = 0;
+      for (var i = 0; i < pat.length; i++) {
+        if (pat[i].hospital_addr == Hospitaldate[a].addr) {
+          num++;
+        }
+      }
+      Patient_NUM_For_Hos[a] = num;
+      setPatientNUM_For_Hos(Patient_NUM_For_Hos);
+    }
+  };
+
+  getallPatients();
 
 ////////////////////////////////////////////////////////////
   return (
