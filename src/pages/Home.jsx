@@ -222,7 +222,7 @@ const Home = () => {
           <div className="row">
             <div className="col-lg-4 d-flex align-items-stretch">
               <div className="content">
-                <h3>Why Choose MedRecChain?</h3>
+                <h3>Why Choose MedVault?</h3>
                 <p className="text-light">
                   Blockchain technology has a great potential for improving
                   efficiency, security and privacy of Electronic Health Records
@@ -254,7 +254,7 @@ const Home = () => {
                       />
                       <h4>Based on Blockchain</h4>
                       <p>
-                        The entire system of MedRecChain is based on blockchain
+                        The entire system of MedVault is based on blockchain
                         technology, making it practically secure.
                       </p>
                     </div>
@@ -270,7 +270,7 @@ const Home = () => {
                       />
                       <h4>Smart Contracts</h4>
                       <p>
-                        MedRecChain is a smart contract-based organization,
+                        MedVault is a smart contract-based organization,
                         making it transparent to the public.
                       </p>
                     </div>

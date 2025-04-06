@@ -6,17 +6,17 @@ const MyFooter = () => {
     <div className="" id="footer">
       <div className=" copy-right">
         <div className="icons-container">
-          <a href="https://github.com/MedRecChain" target="_blank" rel="noreferrer">
+          {/* <a href="https://github.com/MedRecChain" target="_blank" rel="noreferrer">
             <Icon icon="akar-icons:github-fill" color="#000000" />
-          </a>
+          </a> */}
         </div>
-        <div className=" text-center small py-3">
+        {/* <div className=" text-center small py-3">
           © Copyright
           <Link to="/home" className="fs-6 fw-bold text-info ms-1">
             MedRecChain
           </Link>
           . All Rights Reserved
-        </div>
+        </div> */}
 
       </div>
     </div>
