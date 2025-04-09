@@ -9,12 +9,14 @@ import { useLocation } from "react-router-dom";
 import Web3 from "web3";
 import detectEthereumProvider from "@metamask/detect-provider";
 import { useEffect } from "react";
-
+import axios from "axios";
 export default function AddRecord() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const Patient = searchParams.get("Patient");
   const acount = searchParams.get("Doctor");
+  const PINATA_JWT = process.env.REACT_APP_PINATA_JWT;
+
 
   const [Contract, setContract] = useState(null);
 
@@ -94,50 +96,106 @@ export default function AddRecord() {
     setFile(e.target.files[0]);
   };
 
+  // const handleSubmit = async (e) => {
+  //  e.preventDefault();
+  //   if (!file) {
+  //     alert("Please add Record Data.");
+  //     return;
+  //   }
+
+  //   try {
+  //     setIsLoading(true);
+
+  //     // Connect to local IPFS node
+  //     const ipfsClient = create("http://localhost:5002/api/v0"); // Correct IPFS client initialization
+  //     const addedFile = await ipfsClient.add(file); // Add file to IPFS
+
+  //     // Add record to blockchain
+  //     if (Contract) {
+  //       const success = await Contract.methods
+  //         .addRecord(
+  //           record.category,
+  //           record.patientName,
+  //           record.recordName,
+  //           record.date,
+  //           Patient,
+  //           acount,
+  //           addedFile.path,
+  //           record.notes
+  //         )
+  //         .send({ from: acount });
+
+  //       if (success) {
+  //         alert("Record Added Successfully.");
+  //       } else {
+  //         alert("Record Not Added!!");
+  //       }
+  //     } else {
+  //       alert("Contract is not loaded yet.");
+  //     }
+  //   } catch (e) {
+  //     console.error(e);
+  //     alert("An error occurred while adding the record.");
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
   const handleSubmit = async (e) => {
-   e.preventDefault();
-    if (!file) {
-      alert("Please add Record Data.");
-      return;
-    }
+  e.preventDefault();
 
-    try {
-      setIsLoading(true);
+  if (!file) {
+    alert("Please add Record Data.");
+    return;
+  }
 
-      // Connect to local IPFS node
-      const ipfsClient = create("http://localhost:5002/api/v0"); // Correct IPFS client initialization
-      const addedFile = await ipfsClient.add(file); // Add file to IPFS
+  try {
+  setIsLoading(true);
 
-      // Add record to blockchain
-      if (Contract) {
-        const success = await Contract.methods
-          .addRecord(
-            record.category,
-            record.patientName,
-            record.recordName,
-            record.date,
-            Patient,
-            acount,
-            addedFile.path,
-            record.notes
-          )
-          .send({ from: acount });
+  const formData = new FormData();
+  formData.append("file", file);
 
-        if (success) {
-          alert("Record Added Successfully.");
-        } else {
-          alert("Record Not Added!!");
-        }
-      } else {
-        alert("Contract is not loaded yet.");
-      }
-    } catch (e) {
-      console.error(e);
-      alert("An error occurred while adding the record.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  console.log("Uploading to Pinata...");
+  const res = await fetch("https://api.pinata.cloud/pinning/pinFileToIPFS", {
+    method: "POST",
+    headers: {
+      Authorization: process.env.REACT_APP_PINATA_JWT,
+    },
+    body: formData,
+  });
+
+  const data = await res.json();
+  console.log("Pinata upload response:", data);
+
+  if (!res.ok) {
+    throw new Error(`Pinata upload failed: ${data?.error || res.status}`);
+  }
+
+  const cid = data.IpfsHash;
+
+  console.log("Calling smart contract addRecord...");
+  const success = await Contract.methods
+    .addRecord(
+      record.category,
+      record.patientName,
+      record.recordName,
+      record.date,
+      Patient,
+      acount,
+      cid,
+      record.notes
+    )
+    .send({ from: acount });
+
+  console.log("Smart contract result:", success);
+
+  alert(success ? "Record Added Successfully." : "Record Not Added!!");
+} catch (e) {
+  console.error("🔥 Error in handleSubmit:", e);
+  alert("An error occurred while adding the record.");
+}
+
+};
+
 
   return (
     <>

@@ -1,6 +1,7 @@
-// require('dotenv').config();
+require('dotenv').config();
 // const { MNEMONIC, PROJECT_ID } = process.env;
-// const HDWalletProvider = require('@truffle/hdwallet-provider');
+const HDWalletProvider = require('@truffle/hdwallet-provider');
+const { SEPOLIA_PRIVATE_KEY, SEPOLIA_RPC_URL } = process.env;
 module.exports = {
   /**
    * $ truffle test --network <network-name>
@@ -19,6 +20,18 @@ module.exports = {
     //   timeoutBlocks: 200,
     //   gas: 4465030, 
     //   skipDryRun: true
+    // },
+    // Sepolia Testnet
+    // sepolia: {
+    //   provider: () => new HDWalletProvider(
+    //     SEPOLIA_PRIVATE_KEY,
+    //     SEPOLIA_RPC_URL
+    //   ),
+    //   network_id: 11155111,     // Sepolia's network ID
+    //   gas: 5500000,             // Adjust gas limit if needed
+    //   confirmations: 2,         // # of confirmations to wait between deployments
+    //   timeoutBlocks: 200,       // Timeout before failing deployment
+    //   skipDryRun: true          // Skip dry run before migrations
     // },
 
   },
