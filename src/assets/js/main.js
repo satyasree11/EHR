@@ -13,10 +13,11 @@
 	}
 
 
-	document.getElementById("upload").addEventListener("change",function(){
-		var fileName= this.file[0].name;
-		document.getElementByID('file').innerHTML=fileName;
-	  });
+	document.getElementById("upload").addEventListener("change", function () {
+  var fileName = this.files[0].name;
+  document.getElementById('file').innerHTML = fileName;
+});
+
 
 
 	/*=====================================
